@@ -9,6 +9,7 @@ import {
   Container,
   Form,
   Input,
+  Buttons,
   SubmitButton,
   List,
   User,
@@ -16,7 +17,9 @@ import {
   Name,
   Bio,
   ProfileButton,
-  ProfileButtonText
+  ProfileButtonText,
+  ExcludeButton,
+  ExcludeButtonText
 } from "./styles";
 
 Icon.loadFont();
@@ -35,7 +38,8 @@ export default class Main extends Component {
   state = {
     newUser: "",
     users: [],
-    loading: false
+    loading: false,
+    userNotFound: false
   };
 
   async componentDidMount() {
@@ -59,22 +63,38 @@ export default class Main extends Component {
 
     this.setState({ loading: true });
 
-    const response = await api.get(`/users/${newUser}`);
+    try {
+      const response = await api.get(`/users/${newUser}`);
 
-    const data = {
-      name: response.data.name,
-      login: response.data.login,
-      bio: response.data.bio,
-      avatar: response.data.avatar_url
-    };
+      const data = {
+        name: response.data.name,
+        login: response.data.login,
+        bio: response.data.bio,
+        avatar: response.data.avatar_url
+      };
 
-    this.setState({
-      users: [...users, data],
-      newUser: "",
-      loading: false
-    });
+      this.setState({
+        users: [...users, data],
+        newUser: "",
+        loading: false
+      });
+    } catch (error) {
+      this.setState({
+        newUser: "",
+        loading: false,
+        userNotFound: true
+      });
+    }
 
     Keyboard.dismiss();
+  };
+
+  handleExclude = item => {
+    const { users } = this.state;
+
+    this.setState({
+      users: users.filter(e => e.login !== item.login)
+    });
   };
 
   handleNavigate = user => {
@@ -84,7 +104,7 @@ export default class Main extends Component {
   };
 
   render() {
-    const { users, newUser, loading } = this.state;
+    const { users, newUser, loading, userNotFound } = this.state;
 
     return (
       <Container>
@@ -97,6 +117,7 @@ export default class Main extends Component {
             onChangeText={text => this.setState({ newUser: text })}
             returnKeyLabel="send"
             onSubmitEditing={this.handleAddUser}
+            userNotFound={userNotFound}
           />
           <SubmitButton loading={loading} onPress={this.handleAddUser}>
             {loading ? (
@@ -116,9 +137,14 @@ export default class Main extends Component {
               <Name>{item.name}</Name>
               <Bio>{item.bio}</Bio>
 
-              <ProfileButton onPress={() => this.handleNavigate(item)}>
-                <ProfileButtonText>Ver Perfil</ProfileButtonText>
-              </ProfileButton>
+              <Buttons>
+                <ProfileButton onPress={() => this.handleNavigate(item)}>
+                  <ProfileButtonText>Ver Perfil</ProfileButtonText>
+                </ProfileButton>
+                <ExcludeButton onPress={() => this.handleExclude(item)}>
+                  <ExcludeButtonText>Excluir</ExcludeButtonText>
+                </ExcludeButton>
+              </Buttons>
             </User>
           )}
         />

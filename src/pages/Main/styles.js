@@ -21,7 +21,7 @@ export const Input = styled.TextInput.attrs({
   background: #eee;
   border-radius: 4px;
   padding: 0 15px;
-  border: 1px solid #eee;
+  border: 1px solid ${props => (props.userNotFound ? "#ff6e60" : "#eee")};
 `;
 
 export const SubmitButton = styled(RectButton)`
@@ -70,17 +70,41 @@ export const Bio = styled.Text.attrs({
   text-align: center;
 `;
 
+export const Buttons = styled.View`
+  align-self: stretch;
+  flex-direction: row;
+  justify-content: space-around;
+`;
+
 export const ProfileButton = styled(RectButton)`
   margin-top: 10px;
-  align-self: stretch;
   border-radius: 4px;
+  flex: 1;
   background: #7159c1;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  margin-right: 2px;
+`;
+
+export const ProfileButtonText = styled.Text`
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+`;
+
+export const ExcludeButton = styled(RectButton)`
+  margin-top: 10px;
+  border-radius: 4px;
+  flex: 1;
+  background: #717fc1;
   justify-content: center;
   align-items: center;
   height: 36px;
 `;
 
-export const ProfileButtonText = styled.Text`
+export const ExcludeButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
   color: #fff;
