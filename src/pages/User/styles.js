@@ -35,6 +35,16 @@ export const Bio = styled.Text`
   text-align: center;
 `;
 
+export const Loading = styled.ActivityIndicator.attrs({
+  color: "#7159c1",
+  size: 50
+})`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
 export const Stars = styled.FlatList.attrs({
   showsVerticalScroollIndicator: false
 })`
